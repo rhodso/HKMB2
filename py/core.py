@@ -3,6 +3,9 @@ import os
 import subprocess
 import sys
 
+os.add_dll_directory(r"C:\\Program Files\\VideoLAN\\VLC")
+
+
 class core:
     # Core class variables
     LOG_TO_FILE = False
@@ -61,6 +64,19 @@ class core:
         # Create the YTDL object
         self.ytdl = yt_dlp.YoutubeDL(ytdl_opts)
 
+        # if(self.vlc_test()):
+        #     logging.info(msg="VLC test passed")
+        # else:
+        #     logging.info(msg="VLC test failed")
+        #     exit()
+
+    def vlc_test(self):
+        try:
+            vlc_instance = vlc.Instance()
+        except:
+            logging.error(msg="Failed to create vlc instance: " + str(sys.exc_info()[1]))
+            return False
+
     def get_video(self, url):
         info = self.ytdl.extract_info(url, download=False)
 
@@ -79,8 +95,8 @@ class core:
         # Get the source url
         source_url = best_audio_format['url']
 
-        print(source_url)
-        print(type(source_url))
+        # print(source_url)
+        # print(type(source_url))
 
         # Return the source url
         return source_url
@@ -89,12 +105,22 @@ class core:
         # Get the source url
         source_url = self.get_video(url)
 
-        # Play the video
-        inst = vlc.Instance()
-        player = inst.media_player_new()
-        media = inst.media_new(source_url)
-        player.set_media(media)
-        player.play()
+        # Create the vlc instance
+        vlc_instance = vlc.Instance()
+        vlc_player = vlc_instance.media_player_new()
+        
+        # Create the media
+        media = vlc_instance.media_new(source_url)
 
-c = core()
-c.play_song("https://www.youtube.com/watch?v=dQw4w9WgXcQ")
+        # Set the media
+        vlc_player.set_media(media)
+
+        # Play the media
+        vlc_player.play()
+
+def test():
+    c = core()
+    c.play_song("https://www.youtube.com/watch?v=dQw4w9WgXcQ")
+
+if __name__ == '__main__':
+    test()
