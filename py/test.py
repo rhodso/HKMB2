@@ -1,10 +1,16 @@
 # Stanrdard library imports
 import os
 import logging
+import time
+
+os.add_dll_directory(r"C:\\Program Files\\VideoLAN\\VLC")
 
 # Third party imports
 import yt_dlp
 import vlc
+
+# Our imports
+import core
 
 # Options for the ytdl object
 ytdl_opts = {
@@ -38,46 +44,12 @@ if LOG_TO_FILE:
 else:
     log_handler = logging.basicConfig(format='%(asctime)s %(message)s', encoding='utf-8', level=logging.INFO)
 
-# Get the source url from the video url
-def get_video(url):
-    info = ytdl.extract_info(url, download=False)
-
-    formats = info['formats']
-
-    # Get the best audio format
-    for f in formats:
-        if f.get('acodec') == 'opus':
-            best_audio_format = f
-            break
-    
-    # If we didn't find an opus format, just use the first one
-    if not best_audio_format:
-        best_audio_format = formats[0]
-
-    # Get the source url
-    source_url = best_audio_format['url']
-
-    # Return the source url
-    return source_url
-
-# Play the song
-def play_song(url):
-    # Get the source url
-    source_url = get_video(url)
-
-    # Create the vlc instance
-    vlc_instance = vlc.Instance()
-    vlc_player = vlc_instance.media_player_new()
-    
-    # Create the media
-    media = vlc_instance.media_new(source_url)
-
-    # Set the media
-    vlc_player.set_media(media)
-
-    # Play the media
-    vlc_player.play()
-
 # Test here for now
 if __name__ == '__main__':
-    play_song("https://www.youtube.com/watch?v=dQw4w9WgXcQ")
+    logging.info("Starting test")
+    logging.info("Creating objects")
+    SP = core.SongPlayer()
+    SP.play_song("https://www.youtube.com/watch?v=mOanPc8Vhmw")
+    logging.info("Test complete")
+
+

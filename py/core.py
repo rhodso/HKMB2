@@ -85,7 +85,7 @@ class SongPlayer:
 
     def play_song(self, url):
         # Get the source url
-        logging.info(msg="Playing song: " + url)
+        logging.info(msg="Starting play_song")
         source_url = self.get_video(url)
 
         # Create the vlc instance
@@ -99,8 +99,8 @@ class SongPlayer:
         logging.info(msg="Playing song")
         vlc_player.play()
         time.sleep(1.5)
-        duration = vlc_player.get_length() / 1000
-        time.sleep(duration)
+        while vlc_player.is_playing():
+            time.sleep(1)
 
         logging.info(msg="Song finished playing")
 
