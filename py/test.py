@@ -52,4 +52,3 @@ if __name__ == '__main__':
     SP.play_song("https://www.youtube.com/watch?v=mOanPc8Vhmw")
     logging.info("Test complete")
 
-
