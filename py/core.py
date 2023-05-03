@@ -192,10 +192,6 @@ class ApiComms():
         song_dict["Request_ID"] = request_id
         return song_dict
 
-    def get_song_id_from_request_id(self, request_id):
-        logging.info(msg="Getting song ID from request ID: " + str(request_id))
-        
-
     def mark_song_as_played(self, request_id):
         logging.info(msg="Marking song as played: " + str(request_id))
         # Make request to API
@@ -213,4 +209,47 @@ class ApiComms():
         else:
             logging.error(msg="Failed to mark song as played")
             return False
+    
+    def get_request_list(self):
+        logging.info(msg="Getting request list")
+
+        # Make request to API
+        response = self.do_api_request(request_type=0, params={})
+
+        # Check the response
+        if not response:
+            logging.error(msg="Failed to get request list")
+            return None
+
+        # Response is a list of dicts, ordered by votes, and each dict has a "Song_ID", 
+        # which is what we want
+        request_list = []
+        for request in response:
+            # request_list.append([request["Request_ID"], request["Song_ID"]])
+            this_request_dict = {}
+            this_request_dict["request_id"] = request["Request_ID"]
+            this_request_dict["song_id"] = request["Song_ID"]
+            if(request["votes"] == None):
+                this_request_dict["votes"] = 0
+            else:
+                this_request_dict["votes"] = request["votes"]
+
+            # Ask the API for details about the song
+            details_response = self.do_api_request(request_type=4, params={"song_id": request["Song_ID"]})
+
+            # Check the response
+            if not details_response:
+                logging.error(msg="Failed to get song details")
+                return None
+
+            # Add Song_Title and Song_Url to the dict
+            this_request_dict["song_title"] = details_response["Song_Title"]
+            this_request_dict["song_url"] = details_response["Song_Url"]
+
+            # Add the dict to the list
+            request_list.append(this_request_dict)
+
+        # Return the list
+        logging.info(msg="Got request list")
+        return request_list
         
