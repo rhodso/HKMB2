@@ -122,6 +122,9 @@ class ApiComms():
         logging.info(msg="Testing API connection")
         self.do_api_request(-1, {})
         logging.info(msg="API connection successful")
+
+    def get_api_request_timeout(self):
+        return self.api_request_timeout
         
     def do_api_request(self, request_type, params):
         logging.info(msg="Doing API request: " + str(request_type))
@@ -189,8 +192,12 @@ class ApiComms():
         song_dict["Request_ID"] = request_id
         return song_dict
 
+    def get_song_id_from_request_id(self, request_id):
+        logging.info(msg="Getting song ID from request ID: " + str(request_id))
+        
+
     def mark_song_as_played(self, request_id):
-        logging.info(msg="Marking song as played: " + str(song_id))
+        logging.info(msg="Marking song as played: " + str(request_id))
         # Make request to API
         response = self.do_api_request(request_type=1, params={"request_id": request_id})
         

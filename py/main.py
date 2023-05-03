@@ -1,6 +1,8 @@
 import core
 import logging
 
+import time
+
 LOG_TO_FILE = False
 LOG_FILE_NAME = "bot.log"
 
@@ -41,7 +43,7 @@ def do_song_loop():
         # Did we get a song?
         if not song_dict:
             logging.error(msg="Failed to get next song, sleeping for 10 seconds")
-            time.sleep(a.api_request_timeout)
+            time.sleep(a.get_api_request_timeout())
             continue
 
         # Exract the song URL, and the song ID
