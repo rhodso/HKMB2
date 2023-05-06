@@ -95,6 +95,13 @@ class SongPlayer:
         media = vlc_instance.media_new(source_url)
         vlc_player.set_media(media)
 
+        # Check if the media is too long
+        length = vlc_player.get_length() # millis
+        length = length / 1000 # s
+        if length > 720: # 12 mins
+            logging.info(msg="Media over 12 mins, will not play")
+            vlc_player.stop()
+
         # Play the media, wait until it's done playing
         logging.info(msg="Playing song")
         vlc_player.play()
